@@ -10,12 +10,16 @@ namespace UTNCurso.Core.Domain.Services
 {
     public class TodoItemService : ITodoItemService
     {
-        private readonly IMapper<TodoItem, TodoItemDto> _mapper;
+        //private readonly IMapper<TodoItem, TodoItemDto> _mapper;
+        private readonly IMapper _mapper;
+
         private readonly IAgendaRepository _agendaRepository;
         private readonly ILogger<TodoItemService> _logger;
+        
 
         public TodoItemService(
-            IMapper<TodoItem, TodoItemDto> mapper,
+            //IMapper<TodoItem, TodoItemDto> mapper,
+            IMapper mapper,
             IAgendaRepository agendaRepository,
             ILogger<TodoItemService> logger)
         {
@@ -27,7 +31,8 @@ namespace UTNCurso.Core.Domain.Services
         public async Task<IEnumerable<TodoItemDto>> GetAllAsync()
         {
             var agendas = await _agendaRepository.GetAll();
-            return _mapper.MapDalToDto(agendas.SelectMany(x => x.GetAllTodoItems()));
+            //return _mapper.MapDalToDto(agendas.SelectMany(x => x.GetAllTodoItems()));
+            return _mapper.Map<IEnumerable<TodoItemDto>>(agendas.SelectMany(x => x.GetAllTodoItems()));
         }
 
         public async ValueTask<bool> IsModelAvailableAsync()
@@ -37,16 +42,17 @@ namespace UTNCurso.Core.Domain.Services
 
         public async Task<TodoItemDto> GetAsync(long id)
         {
-            var agendas = await _agendaRepository.GetAll();
-            var agenda = agendas.FirstOrDefault();
-            return _mapper.MapDalToDto(agenda.GetTodoItemById(id));
+            var agenda = await _agendaRepository.FirstAgenda();
+            //return _mapper.MapDalToDto(agenda.GetTodoItemById(id));
+            return _mapper.Map<TodoItemDto>(agenda.GetTodoItemById(id));
         }
 
         public async Task<Result> CreateAsync(TodoItemDto todoItemdto)
         {
-            var agendas = await _agendaRepository.GetAll();
-            var agenda = agendas.FirstOrDefault();
-            agenda.AddTodoItem(_mapper.MapDtoToDal(todoItemdto));
+            var agenda = await _agendaRepository.FirstAgenda();
+
+            //agenda.AddTodoItem(_mapper.MapDtoToDal(todoItemdto));
+            agenda.AddTodoItem(_mapper.Map<TodoItem>(todoItemdto));
 
             if (agenda.Result.IsSuccessful)
             {
@@ -59,14 +65,14 @@ namespace UTNCurso.Core.Domain.Services
         public async Task<Result> UpdateAsync(TodoItemDto todoItemDto)
         {
             _logger.LogInformation("Updating todo item");
-            var agendas = await _agendaRepository.GetAll();
-            var agenda = agendas.FirstOrDefault();
+            var agenda = await _agendaRepository.FirstAgenda();
             using (_logger.BeginScope("Trying to update"))
             {
                 try
                 {
                     todoItemDto.LastModifiedDate = DateTime.UtcNow;
-                    var entity = _mapper.MapDtoToDal(todoItemDto);
+                    //var entity = _mapper.MapDtoToDal(todoItemDto);
+                    var entity = _mapper.Map<TodoItem>(todoItemDto);
                     agenda.UpdateTodoItem(entity);
 
                     if (agenda.Result.IsSuccessful)
@@ -105,8 +111,7 @@ namespace UTNCurso.Core.Domain.Services
 
         public async Task<Result> RemoveAsync(long id)
         {
-            var agendas = await _agendaRepository.GetAll();
-            var agenda = agendas.FirstOrDefault();
+            var agenda = await _agendaRepository.FirstAgenda();
             var todoItem = agenda.GetTodoItemById(id);
 
             if (todoItem == null)
@@ -127,9 +132,10 @@ namespace UTNCurso.Core.Domain.Services
         public async Task<IEnumerable<TodoItemDto>> Search(string taskDescription, bool? isCompleted)
         {
             var agendas = await _agendaRepository.GetAll();
-            var results = _mapper.MapDalToDto(agendas.SelectMany(x => x.TodoItems));
+            //var results = _mapper.MapDalToDto(agendas.SelectMany(x => x.TodoItems));
+            var results = _mapper.Map<IEnumerable<TodoItemDto>>(agendas.SelectMany(x => x.TodoItems));
 
-            if(taskDescription is not null)
+            if (taskDescription is not null)
             {
                 results = results.Where(x => x.Task.Contains(taskDescription));
             }

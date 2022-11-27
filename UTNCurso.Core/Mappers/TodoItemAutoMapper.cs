@@ -19,10 +19,18 @@ namespace UTNCurso.Core.Mappers
             return _mapper.Map<TodoItemDto>(entity);
         }
 
+
+
+
+
+
         public IEnumerable<TodoItemDto> MapDalToDto(IEnumerable<TodoItem> entities)
         {
             return _mapper.Map<IEnumerable<TodoItemDto>>(entities);
         }
+
+
+
 
         public IEnumerable<TodoItemDto> MapDalToDto(IReadOnlyCollection<TodoItem> entities)
         {

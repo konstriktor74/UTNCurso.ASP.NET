@@ -5,5 +5,8 @@ namespace UTNCurso.Core.Interfaces
     public interface IAgendaRepository : IRepository<Agenda, Guid>
     {
         Task<IEnumerable<Agenda>> GetAll();
+
+        // metodo primera agenda
+        Task<Agenda> FirstAgenda();
     }
 }

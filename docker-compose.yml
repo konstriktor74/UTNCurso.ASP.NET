@@ -19,11 +19,12 @@ services:
     environment:
         - ACCEPT_EULA=Y
         - SA_PASSWORD=yourStrong(!)Password
-    ports:
+    #cierro la conexion a puerto externo
+    #ports:
       # Db
       # el puerto del connection string se pasa con "{serverName/ip},{puerto} ej: 127.0.0.1,7777"
       # host (mi operativo): contenedor
-        - "7777:1433"
+      #  - "7777:1433"
   utncursoapi:
     image: ${DOCKER_REGISTRY-}utncursoapi
     build:

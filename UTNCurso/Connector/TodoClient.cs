@@ -28,7 +28,7 @@ namespace UTNCurso.Connector
         {
             using (var client = _httpClientFactory.CreateClient())
             {
-                var response = await client.PostAsJsonAsync("http://webapi/todos", todoItem);
+                var response = await client.PostAsJsonAsync("http:// http://localhost:5200/todos", todoItem);
                 var result = JsonConvert.DeserializeObject<Result>(await response.Content.ReadAsStringAsync());
 
                 return result;
@@ -39,7 +39,7 @@ namespace UTNCurso.Connector
         {
             using (var client = _httpClientFactory.CreateClient())
             {
-                return await client.GetFromJsonAsync<TodoItemDto>($"http://webapi/todos/{value}");
+                return await client.GetFromJsonAsync<TodoItemDto>($"http:// http://localhost:5200/todos/{value}");
             }
         }
 
@@ -47,7 +47,7 @@ namespace UTNCurso.Connector
         {
             using (var client = _httpClientFactory.CreateClient())
             {
-                return await client.GetFromJsonAsync<IEnumerable<TodoItemDto>>($"http://webapi/todos/search?taskDescription={taskDescription}&isCompleted={isCompleted}");
+                return await client.GetFromJsonAsync<IEnumerable<TodoItemDto>>($"http:// http://localhost:5200/todos/search?taskDescription={taskDescription}&isCompleted={isCompleted}");
             }
         }
     }

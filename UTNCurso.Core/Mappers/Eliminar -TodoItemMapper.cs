@@ -1,4 +1,5 @@
-﻿using UTNCurso.Core.Domain.Agendas.Entities;
+﻿
+using UTNCurso.Core.Domain.Agendas.Entities;
 using UTNCurso.Core.DTOs;
 using UTNCurso.Core.Interfaces;
 
@@ -6,6 +7,11 @@ namespace UTNCurso.Core.Mappers
 {
     public class TodoItemMapper : IMapper<TodoItem, TodoItemDto>
     {
+
+
+
+
+
         public TodoItemDto MapDalToDto(TodoItem entity)
         {
             return new TodoItemDto
